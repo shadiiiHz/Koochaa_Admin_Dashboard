@@ -270,7 +270,7 @@ export const getCitiesByCountryId = async (dispatch, configuration, id) => {
       configuration
     );
     // console.log(id)
-    console.log("shit",res.data.body.data);
+    
     dispatch(getCitySuccess(res.data.body.data));
     // dispatch(getPageCity(res.data.body.last_page));
   } catch (err) {
@@ -309,7 +309,7 @@ export const getTypes = async (dispatch, configuration, type, page) => {
         `/units/a/categories?type=${type}&page=${page}`,
         configuration
       );
-      console.log(res.data.body.data);
+      // console.log(res.data.body.data);
       dispatch(getTypeSuccess(res.data.body.data));
       dispatch(getPageType(res.data.body.last_page));
     }
@@ -460,7 +460,7 @@ export const getImage = async (dispatch, configuration , file) => {
       file,
       configuration
     );
-    console.log("server",res.data.body.path);
+    // console.log("server",res.data.body.path);
     dispatch(getImageSuccess(res.data.body.path));
   } catch (err) {
     dispatch(getImageFailure());

@@ -244,7 +244,7 @@ const InputContainer = styled.div`
   ${mobile({
     marginBottom: "20px",
     justifyContent: "center",
-   
+
     marginRight: "auto",
     marginLeft: "auto",
   })}
@@ -254,7 +254,6 @@ const InputContainer1 = styled.div`
   flex-direction: row;
   flex: 1;
   ${mobile({
-    
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -283,11 +282,12 @@ const CreateUnit = () => {
   const [mobile, setMobile] = useState([]);
   const [email, setEmail] = useState("");
 
-  const [social, setSocial] = useState({});
   const [telegram, setTelegram] = useState("");
   const [whatsApp, setWhatsApp] = useState("");
   const [instagram, setInstagram] = useState("");
   const [facebook, setFacebook] = useState("");
+  const [social, setSocial] = useState({});
+  // const [social, setSocial] = useState({})
 
   const [address, setAddress] = useState("");
   const [post_code, setPost_code] = useState(0);
@@ -315,7 +315,6 @@ const CreateUnit = () => {
   const [countryName, setCountryName] = useState("");
   const [controller, setController] = useState(1);
 
-  
   const [file, setFile] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
@@ -436,18 +435,6 @@ const CreateUnit = () => {
   const handleClick = async (e) => {
     e.preventDefault();
 
-    if (telegram) {
-      setSocial((prevState) => ({ ...prevState, currentOrNewKey: telegram }));
-    }
-    if (instagram) {
-      setSocial((prevState) => ({ ...prevState, currentOrNewKey: instagram }));
-    }
-    if (whatsApp) {
-      setSocial((prevState) => ({ ...prevState, currentOrNewKey: whatsApp }));
-    }
-    if (facebook) {
-      setSocial((prevState) => ({ ...prevState, currentOrNewKey: facebook }));
-    }
     const form = {
       title,
       description,
@@ -635,7 +622,10 @@ const CreateUnit = () => {
                   <SocialInput
                     type="text"
                     name="instagram"
-                    onChange={(e) => setInstagram(e.target.value)}
+                    onChange={(e) => {
+                      setInstagram(e.target.value);
+                      setSocial({ ...social, instagram: instagram });
+                    }}
                   />
                 )}
               </SocialIcon>
@@ -648,7 +638,10 @@ const CreateUnit = () => {
                   <SocialInput
                     type="text"
                     name="telegram"
-                    onChange={(e) => setTelegram(e.target.value)}
+                    onChange={(e) => {
+                      setTelegram(e.target.value);
+                      setSocial({ ...social, telegram: telegram });
+                    }}
                   />
                 )}
               </SocialIcon>
@@ -661,7 +654,10 @@ const CreateUnit = () => {
                   <SocialInput
                     type="text"
                     name="whatsApp"
-                    onChange={(e) => setWhatsApp(e.target.value)}
+                    onChange={(e) => {
+                      setWhatsApp(e.target.value);
+                      setSocial({ ...social, whatsApp: whatsApp });
+                    }}
                   />
                 )}
               </SocialIcon>
@@ -674,7 +670,10 @@ const CreateUnit = () => {
                   <SocialInput
                     type="text"
                     name="facebook"
-                    onChange={(e) => setFacebook(e.target.value)}
+                    onChange={(e) => {
+                      setFacebook(e.target.value);
+                      setSocial({ ...social, facebook: facebook });
+                    }}
                   />
                 )}
               </SocialIcon>
