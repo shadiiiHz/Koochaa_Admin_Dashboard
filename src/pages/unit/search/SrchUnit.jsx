@@ -157,7 +157,7 @@ const SrchUnit = () => {
       renderCell: (params) => {
         return (
           <ProductListItem>
-            <ProductListImg src={img} alt="" />
+            <ProductListImg src={`http://localhost:8000/storage/image/unit/${params.row.id}/${params.row.logo}`} alt="" />
           </ProductListItem>
         );
       },

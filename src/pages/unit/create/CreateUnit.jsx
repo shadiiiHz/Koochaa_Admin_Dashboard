@@ -23,6 +23,7 @@ import {
   getTypeAndNameForUnit,
   getTypes,
 } from "../../../redux/apiCalls";
+import Swal from "sweetalert2";
 const Createcity = styled.div`
   flex: 9;
   /* height: 100vh; */
@@ -323,6 +324,8 @@ const CreateUnit = () => {
   const [cityName, setCityName] = useState("");
   const [permission, setPermission] = useState(1);
 
+  const [isError, setIsError] = useState(false);
+
   const token = useSelector((state) => state.user.currentUser);
   const categories = useSelector((state) => state.category.categories);
   const continents = useSelector((state) => state.continent.continents);
@@ -355,19 +358,7 @@ const CreateUnit = () => {
       setLogo(logoPath);
     }
   }, [file]);
-  // useEffect(() => {
-  //   if (imageFile) {
-  //     let arr = Array.from(imageFile);
-  //     arr.map((image) => {
-  //       // console.log("image", image)
-  //       const formData = new FormData();
-  //       formData.append("image", image);
-  //       getImage(dispatch, configuration, formData);
-  //       setImages([...images, imagePath]);
-  //       // console.log("image path:",imagePath)
-  //     });
-  //   }
-  // }, [imageFile, dispatch]);
+
   useEffect(() => {
     if (imageFile) {
       let arr = Array.from(imageFile);
@@ -464,9 +455,20 @@ const CreateUnit = () => {
       );
 
       history(`/unit`);
-      console.log(res);
-    } catch (ex) {
-      console.log(ex);
+      // console.log(res);
+    } catch (err) {
+      console.log();
+      if (err.response.status === 422) {
+        Swal.fire({
+          title: "Please complete the information correctly",
+          icon: "warning",
+          showConfirmButton: false,
+          timerProgressBar: true,
+          timer: 3000,
+          toast: true,
+          position: "top",
+        });
+      }
     }
   };
 
@@ -596,6 +598,7 @@ const CreateUnit = () => {
                 name="mobile"
                 placeHolder="enter mobile"
               />
+
               <em
                 style={{
                   fontSize: "20px",
