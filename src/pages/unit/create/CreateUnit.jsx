@@ -332,7 +332,7 @@ const CreateUnit = () => {
   const countries = useSelector((state) => state.country.countries);
   const cities = useSelector((state) => state.city.cities);
   const logoPath = useSelector((state) => state.logo.logo);
-  const imagePath = useSelector((state) => state.image.images);
+  // const imagePath = useSelector((state) => state.image.images);
   const continentId = useSelector((state) => state.continent.id);
   // const types = useSelector((state) => state.type.types);
   const configuration = {
