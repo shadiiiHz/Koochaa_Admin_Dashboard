@@ -23,15 +23,10 @@ import SrchCountry from "./pages/country/search/SrchCountry";
 import UpdateCountry from "./pages/country/update/UpdateCountry";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
-import NewProduct from "./pages/newProduct/NewProduct";
-import NewUser from "./pages/newUser/NewUser";
-import Product from "./pages/product/Product";
-import ProductList from "./pages/productList/ProductList";
 import CreateUnit from "./pages/unit/create/CreateUnit";
 import SrchUnit from "./pages/unit/search/SrchUnit";
 import UpdateUnit from "./pages/unit/update/UpdateUnit";
-import User from "./pages/user/User";
-import UserList from "./pages/userList/UserList";
+
 
 function App() {
   const admin = useSelector((state) => state.user.isAdmin);
@@ -65,28 +60,8 @@ function App() {
           <Route path="/unit" element={isAdmin ? <SrchUnit/> : <Login />} />
           <Route path="/createUnit" element={isAdmin ? <CreateUnit/> : <Login />} />
           <Route path="/unit_update/:unitId" element={isAdmin ? <UpdateUnit /> : <Login />} />
-          {/* <Route path="/users" element={isAdmin ? <UserList /> : <Login />} />
-          <Route
-            path="/user/:userId"
-            element={isAdmin ? <User /> : <Login />}
-          />
-
-          <Route path="/newUser" element={isAdmin ? <NewUser /> : <Login />} />
-
-          <Route
-            path="/products"
-            element={isAdmin ? <ProductList /> : <Login />}
-          />
-
-          <Route
-            path="/product/:productId"
-            element={isAdmin ? <Product /> : <Login />}
-          />
-
-          <Route
-            path="/newproduct"
-            element={isAdmin ? <NewProduct /> : <Login />}
-          /> */}
+         
+     
         </Routes>
       </div>
     </Router>
