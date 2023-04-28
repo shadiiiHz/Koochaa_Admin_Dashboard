@@ -1,47 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const typeSlice = createSlice({
-  name: "type",
+export const emailSlice = createSlice({
+  name: "email",
   initialState: {
-    types: [],
+    emails: [],
     isFetching: false,
     error: false,
     lastPage: 0,
   },
   reducers: {
     //GET ALL
-    getTypeStart: (state) => {
+    getEmailStart: (state) => {
       state.isFetching = true;
       state.error = false;
     },
-    getTypeSuccess: (state, action) => {
+    getEmailSuccess: (state, action) => {
       state.isFetching = false;
-      state.types = action.payload;
+      state.emails = action.payload;
       // state.lastPage = action.payload.last_page;
     },
-    getTypeFailure: (state) => {
+    getEmailFailure: (state) => {
       state.isFetching = false;
       state.error = true;
     },
-    getPageType: (state, action) => {
+    getPageEmail: (state, action) => {
       state.lastPage = action.payload;
 
     },
     clear : (state) => {
       state.lastPage = 0;
-      state.types = [];
+      state.emails = [];
     },
   
   },
 });
 
 export const {
-  getTypeStart,
-  getTypeSuccess,
-  getTypeFailure,
-  deleteTypeStart,
-  getPageType,
+  getEmailStart,
+  getEmailSuccess,
+  getEmailFailure,
+  deleteEmailStart,
+  getPageEmail,
   clear
-} = typeSlice.actions;
+} = emailSlice.actions;
 
-export default typeSlice.reducer;
+export default emailSlice.reducer;

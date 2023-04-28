@@ -20,6 +20,9 @@ import typesRedux from "./typesRedux";
 import unitRedux from "./unitRedux";
 import logoRedux from "./logoRedux";
 import imageredux from "./imageRedux";
+import userListRedux from "./userListRedux";
+import emailRedux from "./emailRedux";
+import fNameRedux from "./fNameRedux.js";
 
 const persistConfig = {
   key: "root",
@@ -37,6 +40,9 @@ const rootReducer = combineReducers({
   unit: unitRedux,
   logo: logoRedux,
   image: imageredux,
+  userList: userListRedux,
+  email: emailRedux,
+  firstName: fNameRedux,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

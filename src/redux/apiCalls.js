@@ -64,6 +64,7 @@ import {
   getTypeStart,
   getTypeSuccess,
   getPageType,
+  clear,
 } from "./typesRedux";
 import {
   getUnitFailure,
@@ -99,6 +100,35 @@ import {
   deleteImageStart,
   deleteImageSuccess,
 } from "./imageRedux";
+import {
+  getUserListFailure,
+  getUserListStart,
+  getUserListSuccess,
+  deleteUserListFailure,
+  deleteUserListStart,
+  deleteUserListSuccess,
+  activeUserListFailure,
+  activeUserListStart,
+  activeUserListSuccess,
+  updateUserListStart,
+  updateUserListSuccess,
+  updateUserListFailure,
+  getPageUserList,
+  deactiveUserListSuccess,
+  deactiveUserListFailure,
+  deactiveUserListStart,
+  activeUserStart,
+  activeUserSuccess,
+  activeUserFailure,
+  deactiveUserFailure,
+  deactiveUserSuccess,
+  deactiveUserStart,
+  deleteUserOfListFailure,
+  deleteUserOfListSuccess,
+  deleteUserOfListStart,
+} from "./userListRedux";
+import { getEmailFailure, getEmailStart, getEmailSuccess, getPageEmail } from "./emailRedux";
+import { getFirstNameFailure, getFirstNameStart, getFirstNameSuccess, getPageFirstName } from "./fNameRedux.js";
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
@@ -436,6 +466,36 @@ export const deleteUnit = async (id, dispatch, configuration) => {
     dispatch(deleteUnitFailure());
   }
 };
+export const activeUnit = async (id, dispatch, configuration) => {
+  dispatch(activeUnitStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.post(
+      `/units/activate/${id}`,
+      "",
+      configuration
+    );
+    // console.log("res", res);
+    dispatch(activeUnitSuccess(id));
+  } catch (err) {
+    dispatch(activeUnitFailure());
+  }
+};
+export const deactiveUnit = async (id, dispatch, configuration) => {
+  dispatch(deactiveUnitStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.post(
+      `/units/deactivate/${id}`,
+      "",
+      configuration
+    );
+    console.log("res", res);
+    dispatch(deactiveUnitSuccess(id));
+  } catch (err) {
+    dispatch(deactiveUnitFailure());
+  }
+};
 ///////////////logo///////////////////
 export const getLogo = async (dispatch, configuration , file) => {
   dispatch(getLogoStart());
@@ -500,5 +560,136 @@ export const deleteImages = async (imageId, dispatch, configuration) => {
     dispatch(deleteImageSuccess());
   } catch (err) {
     dispatch(deleteImageFailure());
+  }
+};
+////////////////userlist/////////////////
+export const getUserList = async (dispatch, configuration, page) => {
+  dispatch(getUserListStart());
+  try {
+    const res = await publicRequest2.get(`/users?page=${page}`, configuration);
+    console.log(res.data.body.data);
+    dispatch(getUserListSuccess(res.data.body.data));
+    dispatch(getPageUserList(res.data.body.last_page));
+  } catch (err) {
+    dispatch(getUserListFailure());
+  }
+};
+export const getByGender = async (dispatch, configuration, gender, page) => {
+  // dispatch(clear());
+  dispatch(getTypeStart());
+  try {
+    
+    if (page == 1) {
+      const res = await publicRequest2.get(
+        `/users?gender=${gender}&page=1`,
+        configuration
+      );
+      console.log(res.data.body.data);
+      dispatch(getTypeSuccess(res.data.body.data));
+      dispatch(getPageType(res.data.body.last_page));
+    } else {
+      const res = await publicRequest2.get(
+        `/users?gender=${gender}&page=${page}`,
+        configuration
+      );
+      console.log(res.data.body.data);
+      dispatch(getTypeSuccess(res.data.body.data));
+      dispatch(getPageType(res.data.body.last_page));
+    }
+  } catch (err) {
+    dispatch(getTypeFailure());
+  }
+};
+export const getByEmail = async (dispatch, configuration, email, page) => {
+  // dispatch(clear());
+  dispatch(getEmailStart());
+  try {
+   
+    if (page == 1) {
+      const res = await publicRequest2.get(
+        `/users?email=${email}&page=1`,
+        configuration
+      );
+      console.log(res.data.body.data);
+      dispatch(getEmailSuccess(res.data.body.data));
+      dispatch(getPageEmail(res.data.body.last_page));
+    } else {
+      const res = await publicRequest2.get(
+        `/users?email=${email}&page=${page}`,
+        configuration
+      );
+      console.log(res.data.body.data);
+      dispatch(getEmailSuccess(res.data.body.data));
+      dispatch(getPageEmail(res.data.body.last_page));
+    }
+  } catch (err) {
+    dispatch(getEmailFailure());
+  }
+};
+export const getByFirstName = async (dispatch, configuration, firstName, page) => {
+  // dispatch(clear());
+  dispatch(getFirstNameStart());
+  try {
+   
+    if (page == 1) {
+      const res = await publicRequest2.get(
+        `/users?first_name=${firstName}&page=1`,
+        configuration
+      );
+      console.log(res.data.body.data);
+      dispatch(getFirstNameSuccess(res.data.body.data));
+      dispatch(getPageFirstName(res.data.body.last_page));
+    } else {
+      const res = await publicRequest2.get(
+        `/users?first_name=${firstName}&page=${page}`,
+        configuration
+      );
+      console.log(res.data.body.data);
+      dispatch(getFirstNameSuccess(res.data.body.data));
+      dispatch(getPageFirstName(res.data.body.last_page));
+    }
+  } catch (err) {
+    dispatch(getFirstNameFailure());
+  }
+};
+export const activeUser = async (id, dispatch, configuration) => {
+  dispatch(activeUserStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.post(
+      `/users/activate/${id}`,
+      "",
+      configuration
+    );
+    // console.log("res", res);
+    dispatch(activeUserSuccess(id));
+  } catch (err) {
+    dispatch(activeUserFailure());
+  }
+};
+export const deactiveUser = async (id, dispatch, configuration) => {
+  dispatch(deactiveUserStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.post(
+      `/users/deactivate/${id}`,
+      "",
+      configuration
+    );
+    // console.log("res", res);
+    dispatch(deactiveUserSuccess(id));
+  } catch (err) {
+    dispatch(deactiveUserFailure());
+  }
+};
+export const deleteUserOfList = async (id, dispatch, configuration) => {
+  dispatch(deleteUserOfListStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.delete(`/users/${id}`, configuration);
+    // console.log(res);
+    dispatch(deleteUserOfListSuccess(id));
+  } catch (err) {
+    dispatch(deleteUserOfListFailure());
   }
 };

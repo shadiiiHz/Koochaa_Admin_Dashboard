@@ -1,14 +1,21 @@
-import { DataGrid } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { mobile } from "../../../responsive";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+    activeUser,
+    deactiveUser,
+  deleteUserOfList,
+  getByEmail,
+  getByFirstName,
+  getByGender,
+  getUserList,
+} from "../../../redux/apiCalls";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { activeUnit, deactiveUnit, deleteUnit, getByTitle, getUnits } from "../../../redux/apiCalls";
-import { mobile } from "../../../responsive";
-import img from "../../../images/Dashboard1.png";
-
-const SearchUnit = styled.div`
+import { DataGrid } from "@mui/x-data-grid";
+const SearchUsers = styled.div`
   flex: 9;
   margin: 50px;
   height: 100%;
@@ -54,7 +61,15 @@ const ProductInput = styled.div`
   align-items: center;
   border: 1px solid #e9967a;
   border-radius: 20px;
+  flex: 1;
   /* background-color: black; */
+  ${mobile({ margin: "20px" })}
+`;
+const InputContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   ${mobile({ margin: "20px" })}
 `;
 const TopSearchIcon = styled.i`
@@ -101,19 +116,33 @@ const ProductListImg = styled.img`
   object-fit: cover;
   margin-right: 10px;
 `;
-const SrchUnit = () => {
+const UserList = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [title, setTitle] = useState("");
+
+  const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
+  const [firstName, setfirstname] = useState("");
+
   const [pageCount, setpageCount] = useState(0);
   const dispatch = useDispatch();
-  const units = useSelector((state) => state.unit.units);
-  const lastPage = useSelector((state) => state.unit.lastPage);
+  const userList = useSelector((state) => state.userList.userList);
+  const lastPage = useSelector((state) => state.userList.lastPage);
 
   const lastPage2 = useSelector((state) => state.type.lastPage);
   const types = useSelector((state) => state.type.types);
   const [pageCount2, setpageCount2] = useState(0);
   const [page2, setPage2] = useState(1);
+
+  const [pageCount3, setpageCount3] = useState(0);
+  const [page3, setPage3] = useState(1);
+  const emails = useSelector((state) => state.email.emails);
+  const lastPage3 = useSelector((state) => state.type.lastPage);
+
+  const [pageCount4, setpageCount4] = useState(0);
+  const [page4, setPage4] = useState(1);
+  const firstNames = useSelector((state) => state.firstName.firstNames);
+  const lastPage4 = useSelector((state) => state.firstName.lastPage);
 
   const token = useSelector((state) => state.user.currentUser);
   const configuration = {
@@ -125,71 +154,97 @@ const SrchUnit = () => {
   };
   useEffect(() => {
     setpageCount(lastPage);
-    getUnits(dispatch, configuration, page);
+    getUserList(dispatch, configuration, page);
   }, [dispatch, page]);
-  useEffect(() => {
-    getByTitle(dispatch, configuration, title, page2);
-    setpageCount2(lastPage2);
-  }, [title, lastPage2, page2]);
 
+  useEffect(() => {
+    getByGender(dispatch, configuration, gender, page2);
+    setpageCount2(lastPage2);
+  }, [gender, lastPage2, page2]);
+
+  useEffect(() => {
+    getByEmail(dispatch, configuration, email, page3);
+    setpageCount3(lastPage3);
+  }, [email, lastPage3, page3]);
+
+  useEffect(() => {
+    getByFirstName(dispatch, configuration, firstName, page4);
+    setpageCount4(lastPage4);
+    console.log(lastPage4)
+  }, [firstName, lastPage4, page4]);
   const handleDelete = (id) => {
-    deleteUnit(id, dispatch, configuration);
+    deleteUserOfList(id, dispatch, configuration);
   };
   const handleActivate = (e, id) => {
     e.preventDefault();
-    activeUnit(id, dispatch, configuration);
+    activeUser(id, dispatch, configuration);
   };
   const handleDectivate = (e, id) => {
     e.preventDefault();
-    deactiveUnit(id, dispatch, configuration);
+    deactiveUser(id, dispatch, configuration);
   };
   const handlePageClick2 = async (data) => {
     let currentPage2 = data.selected + 1;
     setPage2(currentPage2);
   };
+  const handlePageClick3 = async (data) => {
+    let currentPage3 = data.selected + 1;
+    setPage3(currentPage3);
+  };
+  const handlePageClick4 = async (data) => {
+    let currentPage4 = data.selected + 1;
+    setPage4(currentPage4);
+  };
   const columns = [
     { field: "id", headerName: "ID", width: 60 },
     ,
     {
-      field: "logo",
-      headerName: "logo",
+      field: "avatar",
+      headerName: "avatar",
       width: 80,
       renderCell: (params) => {
         return (
           <ProductListItem>
-            <ProductListImg src={`http://localhost:8000/storage/image/unit/${params.row.id}/${params.row.logo}`} alt="" />
+            <ProductListImg
+              src={`http://localhost:8000/storage/image/user/${params.row.id}/${params.row.avatar}`}
+              alt=""
+            />
           </ProductListItem>
         );
       },
     },
     {
-      field: "title",
-      headerName: "title",
-      width: 200,
-      renderCell: (params) => {
-        return <ProductListItem>{params.row.title}</ProductListItem>;
-      },
-    },
-    {
-      field: "description",
-      headerName: "description",
-      width: 180,
-      renderCell: (params) => {
-        return (
-          <ProductListItem>
-            {params.row.description ? params.row.description : "_"}
-          </ProductListItem>
-        );
-      },
-    },
-    {
-      field: "post_code",
-      headerName: "post_code",
+      field: "first_name",
+      headerName: "first_name",
       width: 100,
       renderCell: (params) => {
         return (
           <ProductListItem>
-            {params.row.post_code ? params.row.post_code : "_"}
+            {params.row.first_name ? params.row.first_name : "_"}
+          </ProductListItem>
+        );
+      },
+    },
+    {
+      field: "last_name",
+      headerName: "last_name",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <ProductListItem>
+            {params.row.last_name ? params.row.last_name : "_"}
+          </ProductListItem>
+        );
+      },
+    },
+    {
+      field: "gender",
+      headerName: "gender",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <ProductListItem>
+            {params.row.gender ? params.row.gender : "_"}
           </ProductListItem>
         );
       },
@@ -207,21 +262,14 @@ const SrchUnit = () => {
       },
     },
     {
-      field: "telephone",
-      headerName: "telephone",
+      field: "role_id",
+      headerName: "role_id",
       width: 130,
       renderCell: (params) => {
-        if (params.row.telephone) {
+        if (params.row.role_id) {
           return (
-            <ProductListItem
-              style={{ display: "flex", flexDirection: "column" }}
-            >
-              <Telephone>
-                {params.row.telephone[0] ? params.row.telephone[0] : ""}
-              </Telephone>
-              <Telephone>
-                {params.row.telephone[1] ? params.row.telephone[1] : ""}
-              </Telephone>
+            <ProductListItem>
+              {params.row.role_id === 2 ? "user" : "admin"}
             </ProductListItem>
           );
         }
@@ -265,7 +313,7 @@ const SrchUnit = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/unit_update/" + params.row.id}>
+            <Link to={"/user_update/" + params.row.id}>
               <Btn color="d5c8a9">update</Btn>
             </Link>
           </>
@@ -293,26 +341,82 @@ const SrchUnit = () => {
     let currentPage = data.selected + 1;
     setPage(currentPage);
   };
+
   return (
-    <SearchUnit>
+    <SearchUsers>
       <ProductTitleContainer>
-        <ProductTitle>units</ProductTitle>
+        <ProductTitle>userlist</ProductTitle>
       </ProductTitleContainer>
-      <ProductInput>
-        <TopSearchIcon className="fas fa-search" />
-        <ProductInputInfo
-          placeholder="Enter title..."
-          type="text"
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </ProductInput>
+      <InputContainer>
+        <ProductInput>
+          <TopSearchIcon className="fas fa-search" />
+          <ProductInputInfo
+            placeholder="Enter gender..."
+            type="text"
+            onChange={(e) => setGender(e.target.value)}
+          />
+        </ProductInput>
+        <ProductInput>
+          <TopSearchIcon className="fas fa-search" />
+          <ProductInputInfo
+            placeholder="Enter firstname..."
+            type="text"
+            onChange={(e) => setfirstname(e.target.value)}
+          />
+        </ProductInput>
+        <ProductInput>
+          <TopSearchIcon className="fas fa-search" />
+          <ProductInputInfo
+            placeholder="Enter email..."
+            type="text"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </ProductInput>
+      </InputContainer>
 
       <Link to="/createUnit">
         <Btn color="deb887" margin="30">
-          Create
+          new user
         </Btn>
       </Link>
-      {title && (
+      {firstName && !gender && !email && (
+        <>
+          <DataGrid
+            sx={{
+              width: { xs: "300px", sm: "500px", md: "600px", lg: "100%" },
+            }}
+            rows={firstNames}
+            disableSelectionOnClick
+            columns={columns}
+            getRowId={(row) => row.id}
+            autoHeight
+            {...firstNames}
+          />
+
+          <PaginationStyle>
+            <ReactPaginate
+              previousLabel={"previous"}
+              nextLabel={"next"}
+              breakLabel={"..."}
+              pageCount={pageCount4}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={handlePageClick4}
+              containerClassName={"pagination justify-content-center"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              previousClassName={"page-item"}
+              previousLinkClassName={"page-link"}
+              nextClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              breakClassName={"page-item"}
+              breakLinkClassName={"page-link"}
+              activeClassName={"active"}
+            />
+          </PaginationStyle>
+        </>
+      )}
+      {gender && !email && !firstName && (
         <>
           <DataGrid
             sx={{
@@ -349,18 +453,55 @@ const SrchUnit = () => {
           </PaginationStyle>
         </>
       )}
-      {!title && (
+      {email && !gender && !firstName && (
         <>
           <DataGrid
             sx={{
               width: { xs: "300px", sm: "500px", md: "600px", lg: "100%" },
             }}
-            rows={units}
+            rows={emails}
             disableSelectionOnClick
             columns={columns}
             getRowId={(row) => row.id}
             autoHeight
-            {...units}
+            {...emails}
+          />
+
+          <PaginationStyle>
+            <ReactPaginate
+              previousLabel={"previous"}
+              nextLabel={"next"}
+              breakLabel={"..."}
+              pageCount={pageCount3}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={handlePageClick3}
+              containerClassName={"pagination justify-content-center"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              previousClassName={"page-item"}
+              previousLinkClassName={"page-link"}
+              nextClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              breakClassName={"page-item"}
+              breakLinkClassName={"page-link"}
+              activeClassName={"active"}
+            />
+          </PaginationStyle>
+        </>
+      )}
+      {!gender && !email && !firstName && (
+        <>
+          <DataGrid
+            sx={{
+              width: { xs: "300px", sm: "500px", md: "600px", lg: "100%" },
+            }}
+            rows={userList}
+            disableSelectionOnClick
+            columns={columns}
+            getRowId={(row) => row.id}
+            autoHeight
+            {...userList}
           />
 
           <PaginationStyle>
@@ -386,8 +527,8 @@ const SrchUnit = () => {
           </PaginationStyle>
         </>
       )}
-    </SearchUnit>
+    </SearchUsers>
   );
 };
 
-export default SrchUnit;
+export default UserList;

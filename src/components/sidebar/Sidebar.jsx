@@ -122,6 +122,17 @@ export default function Sidebar() {
               </Link>
             </SidebarList>
           </SidebarMenu>
+          <SidebarMenu>
+            <SidebarTitle>users</SidebarTitle>
+            <SidebarList>
+              <Link to="/users" className="link">
+                <SidebarListItem>
+                  <ChatBubbleOutline className="sidebarIcon" />
+                  userList
+                </SidebarListItem>
+              </Link>
+            </SidebarList>
+          </SidebarMenu>
         </SidebarWrapper>
       </SideBar>
       // <div className="sidebar">

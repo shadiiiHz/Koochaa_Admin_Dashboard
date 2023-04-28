@@ -1,47 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const typeSlice = createSlice({
-  name: "type",
+export const firstNameSlice = createSlice({
+  name: "firstName",
   initialState: {
-    types: [],
+    firstNames: [],
     isFetching: false,
     error: false,
     lastPage: 0,
   },
   reducers: {
     //GET ALL
-    getTypeStart: (state) => {
+    getFirstNameStart: (state) => {
       state.isFetching = true;
       state.error = false;
     },
-    getTypeSuccess: (state, action) => {
+    getFirstNameSuccess: (state, action) => {
       state.isFetching = false;
-      state.types = action.payload;
+      state.firstNames = action.payload;
       // state.lastPage = action.payload.last_page;
     },
-    getTypeFailure: (state) => {
+    getFirstNameFailure: (state) => {
       state.isFetching = false;
       state.error = true;
     },
-    getPageType: (state, action) => {
+    getPageFirstName: (state, action) => {
       state.lastPage = action.payload;
 
     },
     clear : (state) => {
       state.lastPage = 0;
-      state.types = [];
+      state.firstNames = [];
     },
   
   },
 });
 
 export const {
-  getTypeStart,
-  getTypeSuccess,
-  getTypeFailure,
-  deleteTypeStart,
-  getPageType,
+  getFirstNameStart,
+  getFirstNameSuccess,
+  getFirstNameFailure,
+  deleteFirstNameStart,
+  getPageFirstName,
   clear
-} = typeSlice.actions;
+} = firstNameSlice.actions;
 
-export default typeSlice.reducer;
+export default firstNameSlice.reducer;
