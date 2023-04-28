@@ -29,12 +29,9 @@ export const imageSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    deleteImageSuccess: (state, action) => {
+    deleteImageSuccess: (state) => {
       state.isFetching = false;
-      state.images.splice(
-        state.images.findIndex((item) => item.id === action.payload),
-        1
-      );
+     
     },
     deleteImageFailure: (state) => {
       state.isFetching = false;

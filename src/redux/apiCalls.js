@@ -451,6 +451,31 @@ export const getLogo = async (dispatch, configuration , file) => {
     dispatch(getLogoFailure());
   }
 };
+export const deleteLogo = async (unitId, dispatch, configuration) => {
+  dispatch(deleteLogoStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.delete(`/units/images/delete/logo/${unitId}`, configuration);
+    // console.log(res);
+    dispatch(deleteLogoSuccess());
+  } catch (err) {
+    dispatch(deleteLogoFailure());
+  }
+};
+export const uploadLogo = async (unitId,dispatch, configuration , file) => {
+  dispatch(getLogoStart());
+  try {
+    const res = await publicRequest2.post(
+      `/units/images/upload/logo/${unitId}`,
+      file,
+      configuration
+    );
+    // console.log(res);
+    dispatch(getLogoSuccess(res.data.body.path));
+  } catch (err) {
+    dispatch(getLogoFailure());
+  }
+};
 ///////////////////images//////////////////
 export const getImage = async (dispatch, configuration , file) => {
   dispatch(getImageStart());
@@ -464,5 +489,16 @@ export const getImage = async (dispatch, configuration , file) => {
     dispatch(getImageSuccess(res.data.body.path));
   } catch (err) {
     dispatch(getImageFailure());
+  }
+};
+export const deleteImages = async (imageId, dispatch, configuration) => {
+  dispatch(deleteImageStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.delete(`/units/images/delete/other/${imageId}`, configuration);
+    console.log(res);
+    dispatch(deleteImageSuccess());
+  } catch (err) {
+    dispatch(deleteImageFailure());
   }
 };

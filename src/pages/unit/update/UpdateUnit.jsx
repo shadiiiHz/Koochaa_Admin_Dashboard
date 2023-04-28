@@ -16,11 +16,14 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 import {
+  deleteImages,
+  deleteLogo,
   getCitiesByCountryId,
   getContinentIdByName,
   getContinents,
   getCountriesByName,
   getTypeAndNameForUnit,
+  uploadLogo,
 } from "../../../redux/apiCalls";
 const Createcity = styled.div`
   flex: 9;
@@ -266,6 +269,30 @@ const InputContainer2 = styled.div`
     display: "flex",
   })}
 `;
+const UnitLogo = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  cursor: pointer;
+`;
+const UnitLogoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const UnitLogoUpload = styled.div`
+  font-size: 20px;
+
+  font-family: "Delicious Handrawn", cursive;
+  cursor: pointer;
+`;
+const UnitLogoDelete = styled.div`
+  font-size: 20px;
+  margin-top: 5px;
+  font-family: "Delicious Handrawn", cursive;
+  cursor: pointer;
+`;
 const UpdateUnit = () => {
   const history = useNavigate();
   const location = useLocation();
@@ -275,14 +302,11 @@ const UpdateUnit = () => {
     return state.unit.units.find((unit) => unit.id == unitId);
   });
 
-  const [isShownInstagram, setIsShownInstagram] = useState(false);
-  const [isShownTelegram, setIsShownTelegram] = useState(false);
-  const [isShownWhatsApp, setIsShownWhatsApp] = useState(false);
-  const [isShownFacebook, setIsShownFacebook] = useState(false);
+  const [isShownUploadLogo, setIsShownUploadLogo] = useState(false);
 
   const [title, setTitle] = useState(unit.title);
   const [description, setDescription] = useState(unit.description);
-  const [web_site, setWeb_site] = useState(unit.description);
+  const [web_site, setWeb_site] = useState(unit.web_site);
   const [telephone, setTelephone] = useState(unit.telephone);
   const [mobile, setMobile] = useState(unit.mobile);
 
@@ -305,8 +329,11 @@ const UpdateUnit = () => {
   const [country_id, setCountry_id] = useState(unit.country_id);
   const [city_id, setCity_id] = useState(unit.city_id);
   const [is_active, setIs_active] = useState(unit.is_active);
-  // const [logo, setLogo] = useState(unit.logo);
-  // const [images, setImages] = useState([]);
+
+  const [logo, setLogo] = useState(unit.logo);
+  const [images, setImages] = useState(unit.images);
+  const [imagesPath, setImagesPath] = useState();
+
   const [latitude, setLatitude] = useState(unit.latitude);
   const [longitude, setLongitude] = useState(unit.longitude);
 
@@ -323,8 +350,8 @@ const UpdateUnit = () => {
   const [countryName, setCountryName] = useState("");
   const [controller, setController] = useState(1);
 
-  // const [file, setFile] = useState(null);
-  // const [imageFile, setImageFile] = useState(null);
+  const [file, setFile] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   const [cityList, setCityList] = useState([]);
   // const [suggestion, setSuggestion] = useState([]);
@@ -335,7 +362,7 @@ const UpdateUnit = () => {
   const continents = useSelector((state) => state.continent.continents);
   const countries = useSelector((state) => state.country.countries);
   const cities = useSelector((state) => state.city.cities);
-  // const logoPath = useSelector((state) => state.logo.logo);
+  const logoPath = useSelector((state) => state.logo.logo);
   // const imagePath = useSelector((state) => state.image.images);
   const continentId = useSelector((state) => state.continent.id);
   // const types = useSelector((state) => state.type.types);
@@ -346,6 +373,21 @@ const UpdateUnit = () => {
       ContentType: "application/json",
     },
   };
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:8000/api/v1/admin/dashboard/units/${unitId}`,
+        configuration
+      )
+      .then((response) => {
+        console.log(response.data.body.images);
+        setLogo(response.data.body.logo);
+        setImages(response.data.body.images);
+      })
+      .catch((error) => {
+        // handle error
+      });
+  }, [logo]);
   useEffect(() => {
     getContinents(dispatch, configuration, 1);
     setOptionList(continents);
@@ -502,8 +544,10 @@ const UpdateUnit = () => {
     } catch (err) {
       console.log();
       if (err.response.status === 422) {
+        // console.log(err.response.data.message)
+        let error = err.response.data.message;
         Swal.fire({
-          title: "Please complete the information correctly",
+          title: error,
           icon: "warning",
           showConfirmButton: false,
           timerProgressBar: true,
@@ -517,18 +561,7 @@ const UpdateUnit = () => {
   const onOptionChange = (e) => {
     setType(e.target.value);
   };
-  const handleClickInstagram = () => {
-    setIsShownInstagram((current) => !current);
-  };
-  const handleClickTelegram = () => {
-    setIsShownTelegram((current) => !current);
-  };
-  const handleClickWhatsApp = () => {
-    setIsShownWhatsApp((current) => !current);
-  };
-  const handleClickFacebook = () => {
-    setIsShownFacebook((current) => !current);
-  };
+
   const clickHandeler = (text) => {
     setName(text);
     setAllow(1);
@@ -545,9 +578,76 @@ const UpdateUnit = () => {
     setPermission(1);
     setCityList([]);
   };
-  // const handelDeleteLogo = () => {
-  //   setLogo("");
-  // };
+  useEffect(() => {
+    const formData = new FormData();
+    if (file) {
+      formData.append("image", file);
+      uploadLogo(unitId, dispatch, configuration, formData);
+      setLogo(logoPath);
+      setIsShownUploadLogo((current) => !current);
+    }
+  }, [file]);
+  useEffect(() => {
+    if (imageFile) {
+      let arr = Array.from(imageFile);
+      arr.map((image) => {
+        // console.log("image", image)
+        const formData = new FormData();
+        formData.append("image", image);
+        axios
+          .post(
+            `http://localhost:8000/api/v1/admin/dashboard/units/images/upload/other/${unitId}`,
+            formData,
+            configuration
+          )
+          .then((response) => {
+            // setImagesPath((prevArray) => [
+            //   ...prevArray,
+            //   response.data.body.path,
+            // ]);
+            console.log(response.data.body);
+            setImages((prevArray) => [...prevArray, response.data.body]);
+          })
+          .catch((error) => {
+            // handle error
+          });
+
+        // console.log("image path:",imagePath)
+      });
+    }
+  }, [imageFile, dispatch]);
+  const handelClickDeleteImage = (image) => {
+    const { id, path } = image;
+    console.log("path", path);
+
+    const filtered = images.filter((img) => img.path != path);
+    setImages(filtered);
+
+    deleteImages(id, dispatch, configuration);
+    Swal.fire({
+      title: "image deleted!",
+      icon: "success",
+      showConfirmButton: false,
+      timerProgressBar: true,
+      timer: 3000,
+      toast: true,
+      position: "top",
+    });
+  };
+  const handelDeleteLogo = () => {
+    setIsShownUploadLogo((current) => !current);
+    deleteLogo(unitId, dispatch, configuration);
+    setLogo("");
+    Swal.fire({
+      title: "logo deleted!",
+      icon: "success",
+      showConfirmButton: false,
+      timerProgressBar: true,
+      timer: 3000,
+      toast: true,
+      position: "top",
+    });
+  };
   // const handelDeleteImages = () => {
   //   setImages([]);
   // };
@@ -564,6 +664,33 @@ const UpdateUnit = () => {
           </ProductTitleContainer>
 
           <ProductForm>
+            <UnitLogoContainer>
+              
+              <UnitLogo
+                src={`http://localhost:8000/storage/image/unit/${unitId}/${logo}`}
+                alt=""
+              ></UnitLogo>
+              
+              <UnitLogoDelete>
+                delete logo :
+                <DeleteForeverIcon onClick={handelDeleteLogo} />
+              </UnitLogoDelete>
+              {isShownUploadLogo && (
+                <UnitLogoUpload>
+                  <Label2 htmlFor="fileInput">
+                    upload new logo :
+                    <AddToPhotosIcon style={{ margin: "10px" }} />
+                  </Label2>
+                  <Input
+                    type="file"
+                    id="fileInput"
+                    style={{ display: "none" }}
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </UnitLogoUpload>
+              )}
+            </UnitLogoContainer>
+
             <Label1>title</Label1>
             <Input
               defaultValue={unit.title}
@@ -581,13 +708,13 @@ const UpdateUnit = () => {
               name="description"
               onChange={(e) => setDescription(e.target.value)}
             />
+
             <Label1>web_site</Label1>
             <Input
               defaultValue={unit.web_site}
-              required
-              type="url"
+              type="text"
               placeholder="https://example.com"
-              name="web_site"
+              name="website"
               onChange={(e) => setWeb_site(e.target.value)}
             />
             <Label1>email</Label1>
@@ -670,10 +797,7 @@ const UpdateUnit = () => {
               </SocialTitle>
               <SocialIconsContainer>
                 <SocialIcon>
-                  <InstagramIcon
-                    onClick={handleClickInstagram}
-                    style={{ marginBottom: "3px" }}
-                  />
+                  <InstagramIcon style={{ marginBottom: "3px" }} />
 
                   <SocialInput
                     defaultValue={
@@ -690,10 +814,7 @@ const UpdateUnit = () => {
                   />
                 </SocialIcon>
                 <SocialIcon>
-                  <TelegramIcon
-                    onClick={handleClickTelegram}
-                    style={{ marginBottom: "3px" }}
-                  />
+                  <TelegramIcon style={{ marginBottom: "3px" }} />
 
                   <SocialInput
                     defaultValue={
@@ -710,10 +831,7 @@ const UpdateUnit = () => {
                   />
                 </SocialIcon>
                 <SocialIcon>
-                  <WhatsAppIcon
-                    onClick={handleClickWhatsApp}
-                    style={{ marginBottom: "3px" }}
-                  />
+                  <WhatsAppIcon style={{ marginBottom: "3px" }} />
 
                   <SocialInput
                     defaultValue={
@@ -730,13 +848,14 @@ const UpdateUnit = () => {
                   />
                 </SocialIcon>
                 <SocialIcon>
-                  <FacebookIcon
-                    onClick={handleClickFacebook}
-                    style={{ marginBottom: "3px" }}
-                  />
+                  <FacebookIcon style={{ marginBottom: "3px" }} />
 
                   <SocialInput
-                    defaultValue={unit.social && unit.social.facebook? unit.social.facebook : ""}
+                    defaultValue={
+                      unit.social && unit.social.facebook
+                        ? unit.social.facebook
+                        : ""
+                    }
                     type="text"
                     name="facebook"
                     onChange={(e) => {
@@ -747,7 +866,39 @@ const UpdateUnit = () => {
                 </SocialIcon>
               </SocialIconsContainer>
             </SocialMedia>
+            <UnitLogoContainer>
+              <UnitLogoDelete>
+                click on image to delete :
+                {images.map((image) => {
+                  // const {id} = image;
+                  return (
+                    <>
+                      {/* <pre>{JSON.stringify(images)} </pre>{" "} */}
+                      <UnitLogo
+                        style={{ margin: "5px" }}
+                        onClick={() => {
+                          handelClickDeleteImage(image);
+                        }}
+                        src={`http://localhost:8000/storage/image/unit/${unitId}/${image.path}`}
+                        alt=""
+                      ></UnitLogo>
+                    </>
+                  );
+                })}
+              </UnitLogoDelete>
 
+              <UnitLogoUpload style={{ margin: "10px 0px 15px" }}>
+                <Label2>upload new images :</Label2>
+                <form encType="multipart/form-data">
+                  <Input
+                    type="file"
+                    name="imagefile"
+                    multiple
+                    onChange={(e) => setImageFile(e.target.files)}
+                  />
+                </form>
+              </UnitLogoUpload>
+            </UnitLogoContainer>
             <Search>
               <SearchInfo>
                 <Label2>category Type:</Label2>

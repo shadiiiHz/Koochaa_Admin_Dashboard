@@ -360,28 +360,31 @@ const CreateUnit = () => {
   }, [file]);
 
   useEffect(() => {
-    if (imageFile) {
-      let arr = Array.from(imageFile);
-      arr.map((image) => {
-        // console.log("image", image)
-        const formData = new FormData();
-        formData.append("image", image);
-        axios
-          .post(
-            `http://localhost:8000/api/v1/admin/dashboard/units/images/upload/other`,
-            formData,
-            configuration
-          )
-          .then((response) => {
-            setImages((prevArray) => [...prevArray, response.data.body.path]);
-          })
-          .catch((error) => {
-            // handle error
-          });
+    
+      if (imageFile) {
+        let arr = Array.from(imageFile);
+        arr.map((image) => {
+          // console.log("image", image)
+          const formData = new FormData();
+          formData.append("image", image);
+          axios
+            .post(
+              `http://localhost:8000/api/v1/admin/dashboard/units/images/upload/other`,
+              formData,
+              configuration
+            )
+            .then((response) => {
+              setImages((prevArray) => [...prevArray, response.data.body.path]);
+            })
+            .catch((error) => {
+              // handle error
+            });
+  
+          // console.log("image path:",imagePath)
+        });
+      }
 
-        // console.log("image path:",imagePath)
-      });
-    }
+   
   }, [imageFile, dispatch]);
   useEffect(() => {
     if (allow == 1) {
@@ -417,7 +420,7 @@ const CreateUnit = () => {
 
     if (permission == 0) {
       getCitiesByCountryId(dispatch, configuration, country_id);
-      console.log(country_id);
+      // console.log(country_id);
       setCityList(cities);
       setPermission(1);
     }
@@ -459,8 +462,9 @@ const CreateUnit = () => {
     } catch (err) {
       console.log();
       if (err.response.status === 422) {
+        let error = err.response.data.message;
         Swal.fire({
-          title: "Please complete the information correctly",
+          title: error,
           icon: "warning",
           showConfirmButton: false,
           timerProgressBar: true,
@@ -488,7 +492,7 @@ const CreateUnit = () => {
     setName(text);
     setAllow(1);
     setResult([]);
-    console.log("result", result);
+    // console.log("result", result);
   };
   const clickHandelerCountry = (text) => {
     setCountryName(text);

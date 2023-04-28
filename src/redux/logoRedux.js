@@ -29,12 +29,9 @@ export const logoSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    deleteLogoSuccess: (state, action) => {
+    deleteLogoSuccess: (state) => {
       state.isFetching = false;
-      state.logo.splice(
-        state.logo.findIndex((item) => item.id === action.payload),
-        1
-      );
+      state.logo = [];
     },
     deleteLogoFailure: (state) => {
       state.isFetching = false;
