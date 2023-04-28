@@ -93,10 +93,26 @@ export default function Topbar() {
               </Dropdown.Item>
               <Dropdown.Item>
                 <Link
+                  to="/category"
+                  style={{ textDecoration: "none", color: "#999966" }}
+                >
+                  category
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link
                   to="/unit"
                   style={{ textDecoration: "none", color: "#999966" }}
                 >
                   unit
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link
+                  to="/users"
+                  style={{ textDecoration: "none", color: "#999966" }}
+                >
+                  users
                 </Link>
               </Dropdown.Item>
             </DropdownButton>
