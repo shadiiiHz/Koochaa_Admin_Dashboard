@@ -4,9 +4,10 @@ import { mobile } from "../../../responsive";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
 import {
-    activeUser,
-    deactiveUser,
+  activeUser,
+  deactiveUser,
   deleteUserOfList,
   getByEmail,
   getByFirstName,
@@ -170,7 +171,7 @@ const UserList = () => {
   useEffect(() => {
     getByFirstName(dispatch, configuration, firstName, page4);
     setpageCount4(lastPage4);
-    console.log(lastPage4)
+    console.log(lastPage4);
   }, [firstName, lastPage4, page4]);
   const handleDelete = (id) => {
     deleteUserOfList(id, dispatch, configuration);
@@ -205,10 +206,14 @@ const UserList = () => {
       renderCell: (params) => {
         return (
           <ProductListItem>
-            <ProductListImg
-              src={`http://localhost:8000/storage/image/user/${params.row.id}/avatar/${params.row.avatar}`}
-              alt=""
-            />
+            {params.row.avatar ? (
+              <ProductListImg
+                src={`http://localhost:8000/storage/image/user/${params.row.id}/avatar/${params.row.avatar}`}
+                alt=""
+              />
+            ) : (
+              <Avatar src="/broken-image.jpg" sx={{ width: 32, height: 32 }} />
+            )}
           </ProductListItem>
         );
       },

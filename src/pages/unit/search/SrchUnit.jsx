@@ -4,9 +4,16 @@ import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { activeUnit, deactiveUnit, deleteUnit, getByTitle, getUnits } from "../../../redux/apiCalls";
+import {
+  activeUnit,
+  deactiveUnit,
+  deleteUnit,
+  getByTitle,
+  getUnits,
+} from "../../../redux/apiCalls";
 import { mobile } from "../../../responsive";
 import img from "../../../images/Dashboard1.png";
+import Avatar from "@mui/material/Avatar";
 
 const SearchUnit = styled.div`
   flex: 9;
@@ -157,7 +164,14 @@ const SrchUnit = () => {
       renderCell: (params) => {
         return (
           <ProductListItem>
-            <ProductListImg src={`http://localhost:8000/storage/image/unit/${params.row.id}/${params.row.logo}`} alt="" />
+            {params.row.logo ? (
+              <ProductListImg
+                src={`http://localhost:8000/storage/image/unit/${params.row.id}/${params.row.logo}`}
+                alt=""
+              />
+            ) : (
+              <Avatar sx={{ width: 32, height: 32 }}>L</Avatar>
+            )}
           </ProductListItem>
         );
       },
