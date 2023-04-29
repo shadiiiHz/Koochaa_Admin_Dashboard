@@ -12,7 +12,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { useRef } from "react";
+
 import {
   getCitiesByCountryId,
   getContinentIdByName,
@@ -143,7 +143,7 @@ const Suggestion = styled.div`
   padding: 3px;
   margin-top: 0.5rem;
   max-height: 300px;
-
+  font-family: "Vazir", sans-serif;
   cursor: pointer;
   &:hover {
     background-color: #909066;
@@ -360,31 +360,28 @@ const CreateUnit = () => {
   }, [file]);
 
   useEffect(() => {
-    
-      if (imageFile) {
-        let arr = Array.from(imageFile);
-        arr.map((image) => {
-          // console.log("image", image)
-          const formData = new FormData();
-          formData.append("image", image);
-          axios
-            .post(
-              `http://localhost:8000/api/v1/admin/dashboard/units/images/upload/other`,
-              formData,
-              configuration
-            )
-            .then((response) => {
-              setImages((prevArray) => [...prevArray, response.data.body.path]);
-            })
-            .catch((error) => {
-              // handle error
-            });
-  
-          // console.log("image path:",imagePath)
-        });
-      }
+    if (imageFile) {
+      let arr = Array.from(imageFile);
+      arr.map((image) => {
+        // console.log("image", image)
+        const formData = new FormData();
+        formData.append("image", image);
+        axios
+          .post(
+            `http://localhost:8000/api/v1/admin/dashboard/units/images/upload/other`,
+            formData,
+            configuration
+          )
+          .then((response) => {
+            setImages((prevArray) => [...prevArray, response.data.body.path]);
+          })
+          .catch((error) => {
+            // handle error
+          });
 
-   
+        // console.log("image path:",imagePath)
+      });
+    }
   }, [imageFile, dispatch]);
   useEffect(() => {
     if (allow == 1) {
@@ -719,7 +716,12 @@ const CreateUnit = () => {
               <Label2>category title:</Label2>
               <SearchBar>
                 <Input
-                  style={{ direction: "rtl", padding: "8px", flex: "1" }}
+                  style={{
+                    direction: "rtl",
+                    padding: "8px",
+                    flex: "1",
+                    fontFamily: " 'Vazir', sans-serif",
+                  }}
                   type="text"
                   name="name"
                   onChange={(e) => {
@@ -757,6 +759,7 @@ const CreateUnit = () => {
                 padding: "5px",
                 borderRadius: "5px",
                 border: "1px solid #dcdcdc",
+                fontFamily: " 'Vazir', sans-serif",
               }}
               disabled={false}
               value={select}
@@ -773,7 +776,7 @@ const CreateUnit = () => {
             <Label2>country name:</Label2>
             <SearchBar>
               <Input
-                style={{ direction: "rtl" }}
+                style={{ direction: "rtl", fontFamily: " 'Vazir', sans-serif" }}
                 type="text"
                 name="country_id"
                 onChange={(e) => {
@@ -806,7 +809,7 @@ const CreateUnit = () => {
             <Label2>city name:</Label2>
             <SearchBar>
               <Input
-                style={{ direction: "rtl" }}
+                style={{ direction: "rtl", fontFamily: " 'Vazir', sans-serif" }}
                 type="text"
                 name="city_id"
                 onChange={(e) => {

@@ -206,7 +206,7 @@ const UserList = () => {
         return (
           <ProductListItem>
             <ProductListImg
-              src={`http://localhost:8000/storage/image/user/${params.row.id}/${params.row.avatar}`}
+              src={`http://localhost:8000/storage/image/user/${params.row.id}/avatar/${params.row.avatar}`}
               alt=""
             />
           </ProductListItem>
@@ -374,7 +374,7 @@ const UserList = () => {
         </ProductInput>
       </InputContainer>
 
-      <Link to="/createUnit">
+      <Link to="/newUser">
         <Btn color="deb887" margin="30">
           new user
         </Btn>

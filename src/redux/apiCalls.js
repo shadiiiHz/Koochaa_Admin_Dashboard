@@ -693,3 +693,33 @@ export const deleteUserOfList = async (id, dispatch, configuration) => {
     dispatch(deleteUserOfListFailure());
   }
 };
+////////avatar///////////////
+export const getAvatar = async (dispatch, configuration , file) => {
+  dispatch(getLogoStart());
+  try {
+    const res = await publicRequest2.post(
+      `/users/images/upload/avatar`,
+      file,
+      configuration
+    );
+    // console.log(res.data.body.path);
+    dispatch(getLogoSuccess(res.data.body.path));
+  } catch (err) {
+    dispatch(getLogoFailure());
+  }
+};
+////////////passport Image//////////
+export const getPassportImage = async (dispatch, configuration , file) => {
+  dispatch(getImageStart());
+  try {
+    const res = await publicRequest2.post(
+      `/users/images/upload/passport`,
+      file,
+      configuration
+    );
+    console.log("server",res.data.body.path);
+    dispatch(getImageSuccess(res.data.body.path));
+  } catch (err) {
+    dispatch(getImageFailure());
+  }
+};
