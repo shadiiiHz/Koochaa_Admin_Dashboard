@@ -708,12 +708,62 @@ export const getAvatar = async (dispatch, configuration , file) => {
     dispatch(getLogoFailure());
   }
 };
+export const deleteAvatar = async (userId, dispatch, configuration) => {
+  dispatch(deleteLogoStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.delete(`/users/images/delete/avatar/${userId}`, configuration);
+    // console.log(res);
+    dispatch(deleteLogoSuccess());
+  } catch (err) {
+    dispatch(deleteLogoFailure());
+  }
+};
+export const uploadAvatar = async (userId,dispatch, configuration , file) => {
+  dispatch(getLogoStart());
+  try {
+    const res = await publicRequest2.post(
+      `/users/images/upload/avatar/${userId}`,
+      file,
+      configuration
+    );
+    console.log(res.data.body.path);
+    dispatch(getLogoSuccess(res.data.body.path));
+  } catch (err) {
+    dispatch(getLogoFailure());
+  }
+};
 ////////////passport Image//////////
 export const getPassportImage = async (dispatch, configuration , file) => {
   dispatch(getImageStart());
   try {
     const res = await publicRequest2.post(
       `/users/images/upload/passport`,
+      file,
+      configuration
+    );
+    console.log("server",res.data.body.path);
+    dispatch(getImageSuccess(res.data.body.path));
+  } catch (err) {
+    dispatch(getImageFailure());
+  }
+};
+export const deletePassportImage = async (userId, dispatch, configuration) => {
+  dispatch(deleteImageStart());
+  try {
+    // console.log(id);
+    const res = await publicRequest2.delete(`/users/images/delete/passport/${userId}`, configuration);
+    console.log(res);
+    dispatch(deleteImageSuccess());
+  } catch (err) {
+    dispatch(deleteImageFailure());
+  }
+};
+export const uploadPassportImage = async (userId,dispatch, configuration , file) => {
+  dispatch(getImageStart());
+  try {
+    const res = await publicRequest2.post(
+      `/users/images/upload/passport/${userId}`,
       file,
       configuration
     );

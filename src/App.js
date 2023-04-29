@@ -27,6 +27,7 @@ import CreateUnit from "./pages/unit/create/CreateUnit";
 import SrchUnit from "./pages/unit/search/SrchUnit";
 import UpdateUnit from "./pages/unit/update/UpdateUnit";
 import NewUser from "./pages/user/newUser/NewUser";
+import UpdateUser from "./pages/user/update/UpdateUser";
 import UserList from "./pages/user/userList/UserList";
 
 
@@ -64,7 +65,7 @@ function App() {
           <Route path="/unit_update/:unitId" element={isAdmin ? <UpdateUnit /> : <Login />} />
           <Route path="/users" element={isAdmin ? <UserList/> : <Login />} />
           <Route path="/newUser" element={isAdmin ? <NewUser/> : <Login />} />
-     
+          <Route path="/user_update/:userId" element={isAdmin ? <UpdateUser /> : <Login />} />
         </Routes>
       </div>
     </Router>
