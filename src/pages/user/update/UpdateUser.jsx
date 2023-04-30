@@ -397,17 +397,17 @@ const UpdateUser = () => {
         setCountryName(response.data.body.name);
       })
       .catch((error) => {
-        if (error.response.status === 404) {
-          Swal.fire({
-            title: "select valid country",
-            icon: "warning",
-            showConfirmButton: false,
-            timerProgressBar: true,
-            timer: 3000,
-            toast: true,
-            position: "top",
-          });
-        }
+        // if (error.response.status === 404) {
+        //   Swal.fire({
+        //     title: "select valid country",
+        //     icon: "warning",
+        //     showConfirmButton: false,
+        //     timerProgressBar: true,
+        //     timer: 3000,
+        //     toast: true,
+        //     position: "top",
+        //   });
+        // }
       });
   }, []);
   useEffect(() => {
@@ -433,17 +433,17 @@ const UpdateUser = () => {
         setCityName(response.data.body.name);
       })
       .catch((error) => {
-        if (error.response.status === 404) {
-          Swal.fire({
-            title: "select valid city",
-            icon: "warning",
-            showConfirmButton: false,
-            timerProgressBar: true,
-            timer: 3000,
-            toast: true,
-            position: "top",
-          });
-        }
+        // if (error.response.status === 404) {
+        //   Swal.fire({
+        //     title: "select valid city",
+        //     icon: "warning",
+        //     showConfirmButton: false,
+        //     timerProgressBar: true,
+        //     timer: 3000,
+        //     toast: true,
+        //     position: "top",
+        //   });
+        // }
       });
   }, []);
 
@@ -647,14 +647,21 @@ const UpdateUser = () => {
                   />
                 </UnitLogoUpload>
               )}
-              {avatar ? <em style={{ color: "gray" }}>avatar uploaded</em> : ""}
-              <UnitLogoDelete>
-                delete avatar :
-                <DeleteForeverIcon
-                  onClick={handelDeleteAvatar}
-                  fontSize="large"
-                />
-              </UnitLogoDelete>
+              {avatar ? (
+                <>
+                  <em style={{ color: "gray" }}>avatar uploaded</em>{" "}
+                  <UnitLogoDelete>
+                    delete avatar :
+                    <DeleteForeverIcon
+                      onClick={handelDeleteAvatar}
+                      fontSize="large"
+                    />
+                  </UnitLogoDelete>
+                </>
+              ) : (
+                ""
+              )}
+
               {!error.avatar ? (
                 " "
               ) : (
@@ -880,7 +887,7 @@ const UpdateUser = () => {
               </SearchBar>
             </SearchInfo>
             <UnitLogoContainer style={{ marginTop: "30px" }}>
-              {passport_image ? (
+              {passport_image != null ? (
                 <UnitLogo
                   src={`data:image/jpeg;base64,${data}`}
                   alt=""
@@ -910,19 +917,22 @@ const UpdateUser = () => {
                 </UnitLogoUpload>
               )}
               {passport_image ? (
-                <em style={{ color: "gray", marginTop: "10px" }}>
-                  passport Image uploaded
-                </em>
+                <>
+                  <em style={{ color: "gray", marginTop: "10px" }}>
+                    passport Image uploaded
+                  </em>
+                  <UnitLogoDelete>
+                    delete image :
+                    <DeleteForeverIcon
+                      onClick={handelDeletePassportImg}
+                      fontSize="large"
+                    />
+                  </UnitLogoDelete>
+                </>
               ) : (
                 ""
               )}
-              <UnitLogoDelete>
-                delete image :
-                <DeleteForeverIcon
-                  onClick={handelDeletePassportImg}
-                  fontSize="large"
-                />
-              </UnitLogoDelete>
+
               {!error.passport_image ? (
                 " "
               ) : (
