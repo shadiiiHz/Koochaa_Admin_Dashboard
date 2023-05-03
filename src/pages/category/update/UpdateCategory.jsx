@@ -135,7 +135,7 @@ const UpdateCategory = () => {
     <Updatecat>
       <Product>
         <ProductTitleContainer>
-          <ProductTitle>new country</ProductTitle>
+          <ProductTitle>update category</ProductTitle>
         </ProductTitleContainer>
 
         <ProductForm>

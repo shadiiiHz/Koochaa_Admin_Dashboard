@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { getCountriesByName } from "../../../redux/apiCalls";
 import { mobile } from "../../../responsive";
 const Updatecity = styled.div`
   flex: 9;
@@ -93,8 +95,8 @@ const Error = styled.span`
   color: red;
 `;
 const Idcontainer = styled.div`
-  height: 50px;
-  width: 50px;
+  height: 70px;
+  width: 70px;
 
   margin: auto;
   display: flex;
@@ -112,6 +114,41 @@ const IdValue = styled.div`
   color: #090908;
   font-weight: bold;
 `;
+const SearchInfo = styled.div`
+  margin: 10px;
+  display: flex;
+  flex: 1;
+
+  ${mobile({
+    marginBottom: "20px",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  })}
+`;
+const SearchBar = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+const Suggestion = styled.div`
+  background-color: white;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 0px 8px #ddd;
+  padding: 3px;
+  margin-top: 0.5rem;
+  max-height: 300px;
+  font-family: "Vazir", sans-serif;
+  cursor: pointer;
+  &:hover {
+    background-color: #909066;
+  }
+`;
 const UpdateCity = () => {
   const location = useLocation();
   const cityId = location.pathname.split("/")[2];
@@ -125,6 +162,13 @@ const UpdateCity = () => {
   const [country_id, setCountry_id] = useState(city.country_id);
   const [latitude, setLatitude] = useState(city.latitude);
   const [longitude, setLongitude] = useState(city.longitude);
+
+  const dispatch = useDispatch();
+  const countries = useSelector((state) => state.country.countries);
+  const [suggestion, setSuggestion] = useState([]);
+  const [countryName, setCountryName] = useState("");
+  const [controller, setController] = useState(1);
+
   const token = useSelector((state) => state.user.currentUser);
   const configuration = {
     headers: {
@@ -132,6 +176,22 @@ const UpdateCity = () => {
       Accept: "application/json",
       ContentType: "application/json",
     },
+  };
+  useEffect(() => {
+    if (controller == 1) {
+      setSuggestion([]);
+    }
+
+    if (controller == 0) {
+      getCountriesByName(dispatch, configuration, countryName);
+      setSuggestion(countries);
+      setController(1);
+    }
+  }, [countryName]);
+  const clickHandelerCountry = (text) => {
+    setCountryName(text);
+    setController(1);
+    setSuggestion([]);
   };
   const handleClick = async (e) => {
     e.preventDefault();
@@ -152,7 +212,7 @@ const UpdateCity = () => {
     <Updatecity>
       <Product>
         <ProductTitleContainer>
-          <ProductTitle>new country</ProductTitle>
+          <ProductTitle>update city</ProductTitle>
         </ProductTitleContainer>
         <Idcontainer>
           <IdKey>id:</IdKey>
@@ -178,13 +238,39 @@ const UpdateCity = () => {
             onChange={(e) => setLatin_name(e.target.value)}
           />
           {latin_name ? " " : <Error>"latin name is required"</Error>}
-          <Label1>country_id</Label1>
-          <Input
-            defaultValue={city.continent_id}
-            type="text"
-            name="continent_id"
-            onChange={(e) => setCountry_id(e.target.value)}
-          />
+          <SearchInfo>
+            <Label2>country name:</Label2>
+            <SearchBar>
+              <Input
+                style={{ direction: "rtl", fontFamily: " 'Vazir', sans-serif" }}
+                type="text"
+                name="country_id"
+                onChange={(e) => {
+                  setCountryName(e.target.value);
+                  setController(0);
+                }}
+                value={countryName}
+                onBlur={() => {
+                  setTimeout(() => {
+                    setController(1);
+                    setSuggestion([]);
+                  }, 200);
+                }}
+              />
+              {suggestion.map((suggestion) => {
+                return (
+                  <Suggestion
+                    onClick={() => {
+                      clickHandelerCountry(suggestion.name);
+                      setCountry_id(suggestion.id);
+                    }}
+                  >
+                    {suggestion.name}
+                  </Suggestion>
+                );
+              })}
+            </SearchBar>
+          </SearchInfo>
 
           <div className="row m-2 mt-5">
             <div className="col-md-12 ">

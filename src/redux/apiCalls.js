@@ -331,7 +331,7 @@ export const getTypes = async (dispatch, configuration, type, page) => {
         `/units/a/categories?type=${type}&page=1`,
         configuration
       );
-      // console.log(res.data.body.data);
+      console.log(res.data.body.data);
       dispatch(getTypeSuccess(res.data.body.data));
       dispatch(getPageType(res.data.body.last_page));
     } else {
@@ -339,7 +339,7 @@ export const getTypes = async (dispatch, configuration, type, page) => {
         `/units/a/categories?type=${type}&page=${page}`,
         configuration
       );
-      // console.log(res.data.body.data);
+      console.log(res.data.body.data);
       dispatch(getTypeSuccess(res.data.body.data));
       dispatch(getPageType(res.data.body.last_page));
     }

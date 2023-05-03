@@ -42,7 +42,7 @@ const SidebarList = styled.ul`
   padding: 5px;
 `;
 const SidebarListItem = styled.li`
-  font-family: "Delicious Handrawn", cursive;
+font-family: "Delicious Handrawn", cursive;
   font-size: 20px;
   padding: 5px;
   cursor: pointer;

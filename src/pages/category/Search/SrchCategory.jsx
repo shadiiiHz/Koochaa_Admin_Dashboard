@@ -128,6 +128,7 @@ const SrchCategory = () => {
   }, [dispatch, page ]);
 
   useEffect(() => {
+    console.log(type)
     getTypes(dispatch, configuration, type, page2);
     setpageCount2(lastPage2);
   }, [type, lastPage2, page2 ]);

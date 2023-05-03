@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { getContinentIdByName, getContinents } from "../../../redux/apiCalls";
 import { mobile } from "../../../responsive";
 const UpdateCntry = styled.div`
   flex: 9;
@@ -71,6 +73,17 @@ const Input = styled.input`
     padding: 5px;
   }
 `;
+const SelectContainer = styled.div`
+  height: 42px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin: 10px;
+  &:focus {
+    border: none;
+    outline: none;
+  }
+`;
 const ProductFormRight = styled.div`
   margin: auto;
   margin-top: 20px;
@@ -93,8 +106,8 @@ const Error = styled.span`
   color: red;
 `;
 const Idcontainer = styled.div`
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
 
   margin: auto;
   display: flex;
@@ -125,6 +138,12 @@ const UpdateCountry = () => {
   const [continent_id, setContinent_id] = useState(country.continent_id);
   const [latitude, setLatitude] = useState(country.latitude);
   const [longitude, setLongitude] = useState(country.longitude);
+  const [select, setSelected] = useState("");
+  const [optionList, setOptionList] = useState([]);
+  const dispatch = useDispatch();
+
+  const continentId = useSelector((state) => state.continent.id);
+  const continents = useSelector((state) => state.continent.continents);
   const token = useSelector((state) => state.user.currentUser);
   const configuration = {
     headers: {
@@ -133,6 +152,15 @@ const UpdateCountry = () => {
       ContentType: "application/json",
     },
   };
+  useEffect(() => {
+    // fetchData();
+    getContinents(dispatch, configuration, 1);
+    setOptionList(continents);
+  }, []);
+  useEffect(() => {
+    getContinentIdByName(dispatch, configuration, select);
+    setContinent_id(continentId);
+  }, [dispatch, select]);
   const handleClick = async (e) => {
     e.preventDefault();
 
@@ -152,7 +180,7 @@ const UpdateCountry = () => {
     <UpdateCntry>
       <Product>
         <ProductTitleContainer>
-          <ProductTitle>new country</ProductTitle>
+          <ProductTitle>update country</ProductTitle>
         </ProductTitleContainer>
         <Idcontainer>
           <IdKey>id:</IdKey>
@@ -178,14 +206,26 @@ const UpdateCountry = () => {
             onChange={(e) => setLatin_name(e.target.value)}
           />
           {latin_name ? " " : <Error>"latin name is required"</Error>}
-          <Label1>continent_id</Label1>
-          <Input
-            defaultValue={country.continent_id}
-            type="text"
-            name="continent_id"
-            onChange={(e) => setContinent_id(e.target.value)}
-          />
-
+          <SelectContainer>
+            <Label1 style={{ marginRight: "10px" }}>continent</Label1>
+            <select
+              style={{
+                padding: "5px",
+                borderRadius: "5px",
+                border: "1px solid #dcdcdc",
+                fontFamily: " 'Vazir', sans-serif",
+              }}
+              disabled={false}
+              value={select}
+              onChange={(e) => setSelected(e.currentTarget.value)}
+            >
+              {optionList.map((item) => (
+                <option key={item._id} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </SelectContainer>
           <div className="row m-2 mt-5">
             <div className="col-md-12 ">
               {" "}
